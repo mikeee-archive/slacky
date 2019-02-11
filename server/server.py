@@ -41,12 +41,13 @@ class SlackMessageHandler(tornado.web.RequestHandler):
         
 
 def Server(slack_token):
-    return tornado.web.Application([
+    routes = [
         (r"/", RootHandler),
         (r"/health", HealthCheckHandler, {'slack_token': slack_token}),
         (r"/slack/message", SlackMessageHandler, {'slack_token': slack_token}),
         (r"/(.*)", tornado.web.StaticFileHandler, {'path':'static'}) # cruft... TODO: implement a proper method of handling static files
-    ])
+    ]
+    return tornado.web.Application(routes)
 
 def Run(port, slack_token):
     server = Server(slack_token)
