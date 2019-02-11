@@ -8,5 +8,5 @@ COPY . .
 
 RUN pipenv install --system --deploy
 
-CMD ["python", "./helloworld.py"]
+CMD ["python", "./run.py"]
 
