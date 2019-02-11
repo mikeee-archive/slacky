@@ -13,4 +13,4 @@ install:
   - 'pip install pipenv'
   - 'pipenv install --system --deploy'
 script: 
-  - 'python helloworld.py'
+  - 'python run.py'
