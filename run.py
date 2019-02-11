@@ -16,9 +16,12 @@ def _run():
     config = getConfig()
     if config != None:
         port = int(config['port'])
+        slack_token = config['slack_token']
     else:
         port = 8000
-    server.Run(port)
+        slack_token = ''
+    
+    server.Run(port, slack_token)
 
 if __name__ == "__main__":
     _run()

@@ -1,2 +1,3 @@
 # port should ideally remain the same - change the port exposed in the docker-compose file.
 port: 8000
+slack_token: xyz
