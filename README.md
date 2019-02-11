@@ -50,3 +50,7 @@ pip install coverage
 ```bash
 coverage run helloworld.py
 ```
+
+## Licence
+
+Released under the MIT License - For full details check out [LICENSE](https://github.com/mikeee/slacky/blob/master/LICENSE)
