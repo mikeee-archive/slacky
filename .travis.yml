@@ -11,7 +11,7 @@ matrix:
       sudo: true
 install:
   - 'pip install pipenv'
-  - 'pipenv install --sytem --deploy'
+  - 'pipenv install --system --deploy'
 script: 
   - 'python -m pytest --cov=pyblizzard tests --cov-report=xml'
 after_success:
