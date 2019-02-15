@@ -30,15 +30,22 @@ class HealthCheckHandler(tornado.web.RequestHandler):
 class SlackMessageHandler(tornado.web.RequestHandler):
     def initialize(self, slack_token):
         self.slack_token = slack_token
-    def get(self):
+    def post(self):
+        body = json.loads(self.request.body)
+        if body['as_user'] != '':
+                as_user = body['as_user']
         payload = {
             'token':self.slack_token,
-            'channel':'slacky',
-            'text':'testy'
+            'channel':body['channel'],
+            'text':body['text'],
+            'as_user':as_user   
         }
+        self.write(SlackPost(payload))
+    
+
+def SlackPost(payload):
         response = requests.post('https://slack.com/api/chat.postMessage', payload)
-        self.write(response.json())
-        
+        return response.json()
 
 def Server(slack_token):
     routes = [
