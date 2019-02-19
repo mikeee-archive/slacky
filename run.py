@@ -1,6 +1,7 @@
-from server import server
-import yaml
 import os
+import yaml
+from server import server
+import sys
 
 def getConfig():
     if os.path.isfile('config.yml'):
@@ -17,11 +18,11 @@ def _run():
     if config != None:
         port = int(config['port'])
         slack_token = config['slack_token']
+        api_key = config['api_key']
     else:
-        port = 8000
-        slack_token = ''
+        sys.exit('no config specified')
     
-    server.Run(port, slack_token)
+    server.Run(port, slack_token, api_key)
 
 if __name__ == "__main__":
     _run()

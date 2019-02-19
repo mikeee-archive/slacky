@@ -28,35 +28,41 @@ class HealthCheckHandler(tornado.web.RequestHandler):
         return status, message, slack_team
 
 class SlackMessageHandler(tornado.web.RequestHandler):
-    def initialize(self, slack_token):
+    def initialize(self, slack_token, api_key):
         self.slack_token = slack_token
+        self.api_key = api_key
     def post(self):
         body = json.loads(self.request.body)
-        if body['as_user'] != '':
-                as_user = body['as_user']
-        payload = {
-            'token':self.slack_token,
-            'channel':body['channel'],
-            'text':body['text'],
-            'as_user':as_user   
-        }
-        self.write(SlackPost(payload))
-    
+        if body.get('key') == self.api_key:
+            payload = {
+                'token':self.slack_token,
+                'channel':body.get('channel'),
+                'text':body.get('text'),
+                'as_user':body.get('as_user')
+            }  
+            response = SlackPost(payload)
+            status = '200'
+            body = {'status': '%s' % status, 'response': '%s' % response}
+        else:
+            status = '401'
+            body = {'status': '%s' % status}
+
+        self.write(body)
 
 def SlackPost(payload):
         response = requests.post('https://slack.com/api/chat.postMessage', payload)
         return response.json()
 
-def Server(slack_token):
+def Server(slack_token, api_key):
     routes = [
         (r"/", RootHandler),
         (r"/health", HealthCheckHandler, {'slack_token': slack_token}),
-        (r"/slack/message", SlackMessageHandler, {'slack_token': slack_token}),
+        (r"/slack/message", SlackMessageHandler, {'slack_token': slack_token, 'api_key': api_key}),
         (r"/(.*)", tornado.web.StaticFileHandler, {'path':'static'}) # cruft... TODO: implement a proper method of handling static files
     ]
     return tornado.web.Application(routes)
 
-def Run(port, slack_token):
-    server = Server(slack_token)
+def Run(port, slack_token, api_key):
+    server = Server(slack_token, api_key)
     server.listen(port)
     tornado.ioloop.IOLoop.current().start()
