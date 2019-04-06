@@ -7,7 +7,7 @@ def getConfig():
     if os.path.isfile('config.yml'):
         with open("config.yml", 'r') as stream:
             try:
-                configmap = yaml.load(stream)
+                configmap = yaml.safe_load(stream)
                 return configmap
             except yaml.YAMLError as exc:
                 print(exc)
